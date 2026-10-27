@@ -1,0 +1,102 @@
+{
+  "description": "Exact extracted functions before packaging; cell indices are zero-based. Original notebooks are not distributed.",
+  "functions": [
+    {
+      "function": "build_elevation_features_and_target",
+      "notebook": "multistep_elevation_codex.ipynb",
+      "cell_zero_based": 3,
+      "source_sha256": "4bb967fc64da13f60bc4e7235f08b3bf2af37beae09196c5495a81e8a2b87304"
+    },
+    {
+      "function": "causal_poly_residual",
+      "notebook": "multistep_range_codex.ipynb",
+      "cell_zero_based": 3,
+      "source_sha256": "67e9e78d145a632644cf55bc2e8668b2df4b42a005fd245c369905a7ded7d83a"
+    },
+    {
+      "function": "causal_poly_forecast",
+      "notebook": "multistep_range_codex.ipynb",
+      "cell_zero_based": 3,
+      "source_sha256": "210995aa45b7dc8479724f8b7dc9c9d5ef0c748a28ad21951829d1fd97d1bf88"
+    },
+    {
+      "function": "build_range_features_and_target",
+      "notebook": "multistep_range_codex.ipynb",
+      "cell_zero_based": 3,
+      "source_sha256": "784091414e673ab1f20f5a829f5633d6dc691dd919b02f0012a628d09c17583f"
+    },
+    {
+      "function": "wrap_to_pi",
+      "notebook": "multistep_azimuth_codex.ipynb",
+      "cell_zero_based": 3,
+      "source_sha256": "29599560b7afb94fca277b2dc9a3b25cab50f11a1b3283617a602402d29b7c40"
+    },
+    {
+      "function": "wrap_to_2pi",
+      "notebook": "multistep_azimuth_codex.ipynb",
+      "cell_zero_based": 3,
+      "source_sha256": "9a0ebb72ceb78780f89b50673969f4900b1a21aa8f7044e3a4c1b594763cb60b"
+    },
+    {
+      "function": "build_azimuth_windows",
+      "notebook": "multistep_azimuth_codex.ipynb",
+      "cell_zero_based": 4,
+      "source_sha256": "afb6df2c69a2cca53893c6aefbe384a59824495067aa3b8f4c867067ae703ee5"
+    },
+    {
+      "function": "rolling_median_angular_velocity",
+      "notebook": "multistep_azimuth_codex.ipynb",
+      "cell_zero_based": 20,
+      "source_sha256": "f0302e20506ad7d114aeab16f0d8bb68a3ac394abdfe0a85df1c9a65eef959f2"
+    },
+    {
+      "function": "build_azimuth_residual_series",
+      "notebook": "multistep_azimuth_codex.ipynb",
+      "cell_zero_based": 20,
+      "source_sha256": "5bce29761190eafc1dfcb5baf0a1053bf63c2432affbb8bd3290a5afa120b2d8"
+    },
+    {
+      "function": "fit_residual_scalers",
+      "notebook": "multistep_azimuth_codex.ipynb",
+      "cell_zero_based": 20,
+      "source_sha256": "507fc5d9e2248e22c363a66d88fbe53b8e9ef275e49ad518ff8a4c3f12308b3a"
+    },
+    {
+      "function": "chunk_sequence",
+      "notebook": "multistep_azimuth_codex.ipynb",
+      "cell_zero_based": 20,
+      "source_sha256": "9232e1fe810e7271d3246396a731a0e9a0f8e72b5f8fcb7f303f76dd9662d4fc"
+    },
+    {
+      "function": "physical_predictions",
+      "notebook": "multistep_azimuth_codex.ipynb",
+      "cell_zero_based": 20,
+      "source_sha256": "1085c7c7613a1b3f74c5ccae69facf3e90c519d834bb97041f89721c0489ff7e"
+    },
+    {
+      "function": "reset_states",
+      "notebook": "multistep_azimuth_codex.ipynb",
+      "cell_zero_based": 20,
+      "source_sha256": "f2b22265441fe6c940f207156f4e7f858cdfd355789479712f35dbf40a15b410"
+    },
+    {
+      "function": "stream_groups",
+      "notebook": "multistep_azimuth_codex.ipynb",
+      "cell_zero_based": 20,
+      "source_sha256": "554ded394a66663c48f681914e81f99f576852a156d4c0d03178645f1e3a08ae"
+    },
+    {
+      "function": "stateful_epoch",
+      "notebook": "multistep_azimuth_codex.ipynb",
+      "cell_zero_based": 20,
+      "source_sha256": "3eb38b7193f4fb1efb0f89e664b98cb60b149a982d6e6f2254db848fb5bb1e36"
+    },
+    {
+      "function": "predict_stateful_stream",
+      "notebook": "multistep_azimuth_codex.ipynb",
+      "cell_zero_based": 20,
+      "source_sha256": "7215568e77691d980ce7598efb570e3c2b5c407e12c822bd81de9872925b8867"
+    }
+  ]
+}
+

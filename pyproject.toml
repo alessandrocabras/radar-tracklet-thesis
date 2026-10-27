@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "radar-tracklets-thesis"
+version = "0.1.0"
+description = "Review companion: causal radar-observable forecasting and stateful azimuth"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26,<3", "pandas>=2.2,<3", "scikit-learn>=1.5,<2", "joblib>=1.4,<2"]
+
+[project.optional-dependencies]
+neural = ["tensorflow==2.18.0"]
+notebooks = ["jupyterlab>=4,<5", "matplotlib>=3.9,<4"]
+test = ["pytest>=8,<9"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+

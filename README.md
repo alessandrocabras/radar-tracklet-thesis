@@ -1,105 +1,78 @@
-# Causal Radar Tracklet Forecasting — Thesis Review Companion
+# Causal Radar Tracklet Forecasting
 
-Code companion to the thesis chapter **Hybrid Deep Learning for Space-Debris
-Radar Tracklet Reconstruction**. The implementation exposes the causal
-measurement-domain task, coordinate-specific preprocessing, window-model
-families, and final stateful azimuth semantics for review.
+Code companion to **Causal Recurrent Models for Space-Debris Radar Tracklet
+Forecasting**. Three opt-in notebooks cover canonical forecasting, controlled
+recurrent-memory experiments, geometric residual baselines and private export
+analysis.
 
-**Code-only release. No dataset, orbital simulator, split manifest, trained
-weights, scalers, historical figures, or private observation exports are
-distributed. This is not a full reproduction archive for the numerical
-tables and figures in the chapter.**
+**Code only. No data, orbital simulator, split manifests, models, scalers,
+result exports or figures are distributed. Numerical reproduction requires
+authorized private inputs, original manifests and compatible archived artifacts.**
+A fresh training run is not a guarantee of identical historical values.
 
-## Start here
+## Run
 
-1. [Chapter alignment and evidence limits](docs/CHAPTER_ALIGNMENT.md).
-2. [Private input interface](docs/DATA_INTERFACE.md).
-3. [Source provenance](docs/SOURCE_PROVENANCE.json): source function names,
-   original notebook cell indices and SHA-256 identifiers.
-4. [Publication instructions](docs/PUBLISH_IT.md).
-
-The chapter reports historical window-model results and a separate audited
-stateful azimuth result. They must not be conflated. This release does not
-claim that its example constructors reproduce the historical hyperparameter
-search, epoch-87 checkpoint, UKF improvements or hardware timings.
-
-## Repository layout
-
-```text
-notebooks/                 three opt-in private-data review notebooks
-src/radar_tracklets/
-  preprocessing.py         coordinate features, targets, causal baselines
-  models.py                explicit MLP/CNN/GRU/GRU-CNN and final azimuth GRU
-  streaming.py             chunking, fixed trajectory slots, resets, masks
-  workflows.py             private-manifest loading and training-only scaling
-  evaluation.py            physical reconstruction and pooled metrics
-  training.py              opt-in final-azimuth fitting selected on validation RMSE
-tests/                     arbitrary toy-array contract tests
-tools/check_release.py     allowlisted-file and clean-notebook checks
-docs/                      chapter mapping, provenance, limitations, publishing
-```
-
-## Install and run tests
-
-Python 3.11 is the reference interpreter. The production audit recorded
-TensorFlow 2.18.0; install the neural extra in a compatible environment.
-No claim is made that dependency ranges form an exact historical lockfile.
-
-```bash
-python -m venv .venv
-# Windows PowerShell: .\.venv\Scripts\Activate.ps1
-# Linux/container: source .venv/bin/activate
-python -m pip install -e ".[test]"
-python -m pytest -q
-python tools/check_release.py
-```
-
-The core tests need no data or GPU. TensorFlow-specific model tests are
-explicitly skipped without TensorFlow. To run them and open notebooks:
+Python 3.11 is the reference interpreter. TensorFlow 2.18.0 and Keras 3.8.0
+match the audited software family; these dependencies are not a complete
+historical environment lock or a cross-hardware determinism guarantee.
 
 ```bash
 python -m pip install -e ".[neural,notebooks,test]"
 python -m pytest -q
+python tools/check_release.py
 python -m jupyterlab
 ```
 
-In Google Colab connected to a local container, install into the **active
-kernel**, e.g. `%pip install -e /mounted/path/to/this/repository[neural,notebooks,test]`.
-The notebook paths must be container-visible. None depends on a particular
-Drive account, Windows username, or `/content` project directory.
+For tests without TensorFlow: install `.[test]`. Neural tests are explicitly
+skipped. In Colab, install into the **active kernel** with `%pip`; all paths
+must be visible inside its local container.
 
-## Task contract
+Start with [private input configuration](docs/DATA_INTERFACE.md).
+Each notebook is disabled by default and writes only to external, unique
+run directories. The same experiment can be run without Jupyter:
 
-- Canonical inputs: 25 noisy observations through t; one target at t+1.
-- Elevation: direct clean-value regression, eight input features.
-- Range: nine input features and residual around a past-data polynomial
-  forecast, not residual around an unavailable target-time measurement.
-- Canonical azimuth: six features relative to the first noisy window pivot.
-- Final azimuth: nine features, GRU 256 with no convolutions, dense sequence
-  outputs; Huber delta 2 on the **standardized residual** scale.
-- No clean predictor features or autoregressive teacher forcing.
-- Window CNNs use kernel 5 with `same` padding, within the observed window.
-- Stateful azimuth uses batches of eight distinct trajectories and consecutive
-  non-overlapping chunks of 25. State is reset at group boundaries, not chunks.
-- Final evaluation starts at target index 25. Padding weights and metric
-  selection are separate mechanisms. A complete 319-record trajectory supplies
-  294 evaluated targets.
-- Errors are pooled across valid target samples. Elevation is an ordinary
-  difference; only azimuth is circular. Angular metrics are mrad, range is m.
+```bash
+python -m radar_tracklets /external/private/configuration.json
+```
 
-## Private-data notebooks
+## Protocols
 
-`elevation.ipynb`, `range.ipynb` and `azimuth.ipynb` do nothing with private
-data unless their opt-in flags are set. Use original private manifests and
-compatible models/scalers. All fitting is explicit; examples do not save or
-overwrite files. Do not commit executed notebooks containing private outputs.
-Keep all private inputs and generated artefacts outside the repository.
+| Mode | Purpose |
+| --- | --- |
+| `canonical` | Stateless GRU, 25 noisy inputs, one future target; GRU-CNN is optional |
+| `focused` | Archived/fresh nine-feature stateful GRU with Huber delta 2 |
+| `memory20` | Matched retain/reset pairs: 20 full epochs, shared initialization/scalers |
+| `geometry40` | Matched angular/geometric residual pairs: 40 full epochs, shared initialization/scalers |
 
-## Availability and reuse
+Checkpoint selection uses validation, never test scores. The fixed-budget
+protocols do not early-stop. The geometric baseline and fallback output-fusion
+rule are selected on validation. These remain exploratory follow-ups after
+historical test consultation, not a newly independent confirmatory study.
 
-Dataset/simulator publication permission has not been established. Their
-absence is intentional. This repository does not grant access to them.
-No open-source license has been assigned automatically: before public release,
-the author/institution should verify code-publication rights and choose a
-license if appropriate. Public visibility alone does not grant reuse rights.
+## Minimal layout
+
+- `notebooks/`: elevation, range and azimuth entry points.
+- `src/radar_tracklets/`: features, models, stateful batching, training,
+  external-data workflows, physical metrics and title-free plotting.
+- `tests/`: arbitrary toy-array tests; no orbital simulator or benchmark data.
+- `tools/check_release.py`: allowlisted files, clean notebooks and disclosure checks.
+- `docs/`: [chapter mapping](docs/CHAPTER_ALIGNMENT.md),
+  [provenance](docs/SOURCE_PROVENANCE.json),
+  [local verification](docs/LOCAL_VALIDATION.md), [publishing](docs/PUBLISH_IT.md).
+
+The original unfiltered benchmark and new visibility-corrected-generator
+illustrations are different evidence sets. This repository never filters the
+original splits to conceal negative elevation or replaces their results with
+new examples. External posterior UKF comparisons are labelled as unequal
+information sets; the missing filter implementation is not reconstructed.
+
+Only azimuth errors are circular. Physical metrics pool valid target errors,
+not per-trajectory RMSEs; seed summaries report mean and sample SD of seed-level
+metrics. All figures are computed from external predictions, without manual
+result curves, titles or captions.
+
+Publication permission for data/simulator has not been established. No license
+is assigned automatically: the author/institution should confirm code rights
+and choose a license if appropriate. Public visibility alone does not grant
+reuse rights.
 

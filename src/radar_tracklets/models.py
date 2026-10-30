@@ -15,12 +15,8 @@ class LastTimeStep(layers.Layer):
         return super().get_config()
 
 
-def build_window_model(coordinate, architecture="GRU-CNN", seed=42):
-    """Notebook architecture definitions, with explicit family selection.
-
-    Defaults describe the chapter's hybrid family, not its historical tuning
-    outcome. All models emit one scalar for the next target after a window.
-    """
+def build_window_model(coordinate, architecture="GRU", seed=42):
+    """Canonical stateless GRU; other families require explicit selection."""
     tf.keras.utils.set_random_seed(seed)
     inputs = layers.Input(shape=(25, FEATURE_DIMENSIONS[coordinate]))
     if architecture == "MLP":
@@ -51,13 +47,13 @@ def build_window_model(coordinate, architecture="GRU-CNN", seed=42):
     return model
 
 
-def build_final_azimuth(seed=42):
+def build_final_azimuth(seed=42, units=256, dense_units=64):
     """Focused stateful_dense_huber_d2: fixed eight-trajectory batch."""
     tf.keras.utils.set_random_seed(seed)
     model = keras.Sequential([
         layers.Input(batch_shape=(8, 25, 9)),
-        layers.GRU(256, stateful=True, return_sequences=True),
-        layers.Dense(64, activation="relu"),
+        layers.GRU(units, stateful=True, return_sequences=True),
+        layers.Dense(dense_units, activation="relu"),
         layers.Dense(1),
     ])
     model.compile(optimizer=keras.optimizers.Adam(1e-3),

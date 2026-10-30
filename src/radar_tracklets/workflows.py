@@ -1,7 +1,6 @@
 """Small, explicit adapters for user-supplied private data.
 
-These adapters do not create splits, search hyperparameters, or recreate
-historical experiments. The notebook functions supply feature semantics.
+These adapters preserve supplied trajectory splits and training-only scaling.
 """
 import json
 from pathlib import Path
@@ -17,7 +16,13 @@ from .streaming import chunk_sequence
 def read_manifest(path):
     """Require explicit trajectory-held-out lists. Never infer a new split."""
     manifest = json.loads(Path(path).read_text(encoding="utf-8"))
-    splits = {key: manifest[key] for key in ("train_files", "val_files", "test_files")}
+    keys = ("train_files", "val_files", "test_files")
+    if "split_files" in manifest:
+        splits = dict(zip(keys, (manifest["split_files"][key] for key in ("train", "val", "test"))))
+        if any(key in manifest and manifest[key] != splits[key] for key in keys):
+            raise ValueError("Conflicting manifest split representations")
+    else:
+        splits = {key: manifest[key] for key in keys}
     for key, names in splits.items():
         if not isinstance(names, list) or not names:
             raise ValueError(f"Missing/non-list/empty {key}")
@@ -46,8 +51,11 @@ def read_pair(root, name):
         times = noisy["Time (s)"].to_numpy(float)
         if not (np.isfinite(times).all() and np.all(np.diff(times) > 0)):
             raise ValueError(f"Invalid timestamps: {name}")
-        # Pairing is by sample index. Receive times may differ between noise and
-        # clean files; do not silently nearest-neighbour match their observables.
+        reference = clean["Time (s)"].to_numpy(float)
+        if not np.allclose(times, reference, atol=1e-9, rtol=0):
+            raise ValueError(f"Noisy and clean timestamps differ: {name}")
+    elif ("Time (s)" in noisy) != ("Time (s)" in clean):
+        raise ValueError(f"Timestamp column is present in only one member: {name}")
     return noisy, clean
 
 

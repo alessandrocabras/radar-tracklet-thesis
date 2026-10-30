@@ -1,5 +1,5 @@
 {
-  "description": "Exact extracted functions before packaging; cell indices are zero-based. Original notebooks are not distributed.",
+  "description": "Hashes identify original private source function text before packaging, not current public file checksums. Cell indices are zero-based. Originals are not distributed.",
   "functions": [
     {
       "function": "build_elevation_features_and_target",
@@ -96,6 +96,41 @@
       "notebook": "multistep_azimuth_codex.ipynb",
       "cell_zero_based": 20,
       "source_sha256": "7215568e77691d980ce7598efb570e3c2b5c407e12c822bd81de9872925b8867"
+    }
+  ],
+  "adaptations": [
+    "English docstrings and messages; explicit package interfaces and opt-in external configurations.",
+    "Canonical model default changed to stateless GRU; GRU-CNN remains explicit.",
+    "Streaming adds retained/reset state policies, trajectory identifiers and rejection of variable-length group truncation.",
+    "Original split_files manifest schema and strict recorded timestamp pairing are supported.",
+    "Controlled fixed-budget training and geometric/fallback analysis are adapted from the later private experiment engines."
+  ],
+  "follow_up_sources": [
+    {
+      "source": "server_tests_complete/deadline_engine.py",
+      "functions": [
+        "controlled"
+      ],
+      "protocol": "20 complete epochs; matched initial weights and scaling; physical validation checkpoint"
+    },
+    {
+      "source": "server_tests_complete/overnight_geometry_engine.py",
+      "functions": [
+        "cartesian_forecast",
+        "baselines",
+        "training",
+        "gate_candidates",
+        "gating",
+        "sample_frame"
+      ],
+      "protocol": "40 complete epochs; validation-selected geometry and fallback; common angular-residual scaling"
+    },
+    {
+      "source": "multistep_azimuth_codex.ipynb",
+      "functions": [
+        "train_focused_variant"
+      ],
+      "protocol": "focused Huber-d2; physical validation min_delta and patience"
     }
   ]
 }

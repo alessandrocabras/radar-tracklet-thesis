@@ -14,8 +14,12 @@ ALLOWED = {
     "src/radar_tracklets/streaming.py", "src/radar_tracklets/models.py",
     "src/radar_tracklets/workflows.py", "src/radar_tracklets/evaluation.py",
     "src/radar_tracklets/training.py",
+    "src/radar_tracklets/geometry.py", "src/radar_tracklets/reporting.py",
+    "src/radar_tracklets/analysis.py", "src/radar_tracklets/experiments.py",
+    "src/radar_tracklets/__main__.py",
     "notebooks/elevation.ipynb", "notebooks/range.ipynb", "notebooks/azimuth.ipynb",
     "tests/test_protocol.py", "tests/test_models.py", "tools/check_release.py",
+    "tests/test_followups.py",
 }
 
 

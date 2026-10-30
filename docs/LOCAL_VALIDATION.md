@@ -1,31 +1,42 @@
-# Local preparation checks
+# Local verification
 
-Prepared 2026-10-27. These checks concern the code-only release, not benchmark
-performance and not verification of all historical chapter claims.
+Updated 2026-10-30. These are software checks, not new benchmark results.
 
-| Check | Local outcome |
+| Check | Outcome |
 | --- | --- |
-| Core contract tests | 18 passed |
-| Optional TensorFlow model-test module | Skipped: TensorFlow not installed in the local preparation environment |
-| Exact source-function provenance | 16 extracted functions match their recorded source SHA-256 hashes |
-| Three notebooks, default flags | All code cells execute without accessing private data or starting training |
-| Private benchmark evaluation/training | Not executed; no benchmark, checkpoints or scalers included |
-| Historical tables, figures, hyperparameter-search logs | Not reproduced; see chapter-alignment limits |
+| Complete test suite, including TensorFlow | 57 passed |
+| Three notebooks with default flags | All code cells execute without private access or training |
+| Release checker | 28 allowlisted files; syntax and clean notebook outputs pass |
+| Whitespace check | git diff --check passes |
+| Private/public geometric formula comparison | Eight toy sequences, both degrees and all four lookbacks; maximum absolute Cartesian delta 9.1e-13 m |
+| Full production training or dataset-wide checkpoint re-evaluation | Not rerun during this repository update |
 
-Core tests cover first/last target alignment, feature dimensions, clean-value
-independence, future-observation perturbations, range baseline/error identity,
-streaming padding and support selection, fixed-batch omissions/reset events,
-circular versus ordinary errors, pooled metrics, training-only scaler fitting
-and preservation of supplied checkpoint scalers.
+Tests cover causal features/baselines, clean independence, target alignment,
+original manifest reading, timestamps, training-only scaling, padding versus
+metric masks, batch omissions and resets, architecture shapes/counts,
+recurrent chunk invariance, a complete 20-epoch tiny-model control test,
+checkpoint selection, frozen window/stream entry points, exact common support,
+P99/extreme exports, fallback gates, seed statistics, spatial metrics,
+explicit UKF units and title-free plotting.
 
-Relevant local versions: Python 3.11, NumPy 2.4.6, pandas 2.2.2,
-scikit-learn 1.6.1, joblib 1.5.3, pytest 8.3.5. The preparation environment is
-separate from the production Colab/container environment. These versions do
-not assert a historical training environment. TensorFlow tests should be run
-with the neural extra in the production-compatible container before claiming
-neural runtime validation of this refactored release.
+Tests use arbitrary arithmetic/random arrays, not orbital trajectories.
+The 20-epoch test uses a four-unit GRU, not the benchmark's 256-unit network.
+Frozen-entry tests save/reload toy checkpoints and scalers in temporary external
+directories; no private benchmark data or artifact is copied into the release.
 
-Git is initialized locally with a new independent history, no remote and no
-public upload. The release checker enforces an explicit file allowlist,
-parses Python/notebook code and rejects saved notebook outputs. It is not a
-substitute for reviewing the staged diff and institutional publication rights.
+Local Windows software: Python 3.11, NumPy 2.0.2, pandas 2.2.2,
+scikit-learn 1.6.1, joblib 1.5.3, TensorFlow 2.18.0, Keras 3.8.0,
+matplotlib 3.11.1, pytest 8.3.5. Pytest was reused from a separate local test
+environment after the primary environment's site-packages. A fresh dependency
+installation and production GPU rerun were not performed. Passing tests do not
+guarantee bitwise historical reproduction.
+
+Original source hashes in SOURCE_PROVENANCE.json identify pre-packaging
+functions, not current files after refactoring. The geometric comparison
+executed only the two already-inspected pure measurement-domain reference
+functions, not a simulator or private experiment engine.
+
+The existing origin points to the author's reviewer repository. This update
+does not commit, push, alter remote history, or publish private artifacts.
+The author must review the staged diff and institutional code-publication
+rights before uploading.

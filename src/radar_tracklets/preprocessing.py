@@ -18,13 +18,8 @@ def wrap_to_2pi(angle):
     return np.mod(np.asarray(angle), 2.0 * np.pi)
 
 
-def build_elevation_features_and_target(df_noise, df_clean, horizon=1, include_cartesian_features=False):
-    """
-    Costruisce feature e target per elevation forecasting.
-
-    Default: usa solo misure radar rumorose e loro delta. I campi rx/ry/rz sono esclusi
-    per evitare leakage se derivano dalla traiettoria clean/simulata.
-    """
+def build_elevation_features_and_target(df_noise, df_clean, horizon=1):
+    """Noisy radar features and next clean elevation; no simulator coordinates."""
     elevation = df_noise['Elevation (rad)'].to_numpy()
     azimuth = df_noise['Azimuth (rad)'].to_numpy()
     r_range = df_noise['Range (m)'].to_numpy()
@@ -45,12 +40,6 @@ def build_elevation_features_and_target(df_noise, df_clean, horizon=1, include_c
         doppler = df_noise['Doppler (m/s)'].to_numpy()
         feature_columns.extend([doppler, np.diff(doppler, prepend=doppler[0])])
         feature_names.extend(['doppler', 'd_doppler'])
-
-    if include_cartesian_features:
-        for col, name in [('rx (m)', 'rx'), ('ry (m)', 'ry'), ('rz (m)', 'rz')]:
-            values = df_noise[col].to_numpy()
-            feature_columns.extend([values, np.diff(values, prepend=values[0])])
-            feature_names.extend([name, f'd_{name}'])
 
     clean_elevation = df_clean['Elevation (rad)'].to_numpy()
     max_len = min(*(len(col) for col in feature_columns), len(clean_elevation) - horizon)
